@@ -1,0 +1,11 @@
+{
+	"required": false,
+	"package": "com.miketavious.automine.mixin.client",
+	"compatibilityLevel": "JAVA_21",
+	"refmap": "automine.refmap.json",
+	"client": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

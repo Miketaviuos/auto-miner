@@ -1,0 +1,45 @@
+{
+	"schemaVersion": 1,
+	"id": "automine",
+	"version": "${version}",
+	"name": "Auto Mine",
+	"description": "A client-side auto mining mod for Minecraft",
+	"authors": [
+		"Miketavious"
+	],
+	"contact": {
+		"homepage": "https://github.com/yourusername/automine-mod",
+		"sources": "https://github.com/yourusername/automine-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/automine/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.miketavious.automine.AutoMineClient"
+		],
+		"modmenu": [
+			"com.miketavious.automine.integration.AutoMineModMenuApiImpl"
+		]
+	},
+	"mixins": [
+		{
+			"config": "automine.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"custom": {
+		"modmenu": {
+			"badges": [ "client" ],
+			"links": {
+				"modmenu.github": "https://github.com/yourusername/automine-mod"
+			}
+		}
+	}
+}

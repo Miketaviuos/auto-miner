@@ -187,16 +187,16 @@ public class AutoMineHandler {
         return toolValidationCache;
     }
 
-    // Modern switch expression with guard clause
+    // Modern switch expression with guard clause - ALL mode allows anything including empty hand
     private static boolean isValidTool(Item item, AutoMineType type) {
-        if (item == null || type == null) return false;
+        if (type == null) return false;
 
         return switch (type) {
-            case PICKAXE -> AutoMineItemsList.pickaxeSet.contains(item);
-            case AXE -> AutoMineItemsList.axeSet.contains(item);
-            case SHOVEL -> AutoMineItemsList.shovelSet.contains(item);
-            case TOOLS -> AutoMineItemsList.allToolsSet.contains(item);
-            case ALL -> true;
+            case PICKAXE -> item != null && AutoMineItemsList.pickaxeSet.contains(item);
+            case AXE -> item != null && AutoMineItemsList.axeSet.contains(item);
+            case SHOVEL -> item != null && AutoMineItemsList.shovelSet.contains(item);
+            case TOOLS -> item != null && AutoMineItemsList.allToolsSet.contains(item);
+            case ALL -> true; // Allow anything - empty hand, any item, etc.
         };
     }
 

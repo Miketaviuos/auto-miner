@@ -2,14 +2,15 @@
 	"schemaVersion": 1,
 	"id": "automine",
 	"version": "${version}",
-	"name": "Auto Mine",
-	"description": "A client-side auto mining mod for Minecraft",
+	"name": "Miketavious's Auto Miner",
+	"description": "A client-side auto mining mod for Minecraft with durability protection and tool filtering",
 	"authors": [
 		"Miketavious"
 	],
 	"contact": {
-		"homepage": "https://github.com/yourusername/automine-mod",
-		"sources": "https://github.com/yourusername/automine-mod"
+		"homepage": "https://github.com/Miketaviuos/auto-miner",
+		"sources": "https://github.com/Miketaviuos/auto-miner",
+		"issues": "https://github.com/Miketaviuos/auto-miner/issues"
 	},
 	"license": "MIT",
 	"icon": "assets/automine/icon.png",
@@ -22,24 +23,12 @@
 			"com.miketavious.automine.integration.AutoMineModMenuApiImpl"
 		]
 	},
-	"mixins": [
-		{
-			"config": "automine.client.mixins.json",
-			"environment": "client"
-		}
-	],
 	"depends": {
 		"fabricloader": ">=0.16.10",
 		"minecraft": "~1.21.5",
 		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"custom": {
-		"modmenu": {
-			"badges": [ "client" ],
-			"links": {
-				"modmenu.github": "https://github.com/yourusername/automine-mod"
-			}
-		}
+		"fabric-api": "*",
+		"modmenu": ">=11.0.0",
+		"cloth-config": ">=15.0.0"
 	}
 }

@@ -5,7 +5,21 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
+import static com.miketavious.automine.config.NotificationType.*;
+import static com.miketavious.automine.config.AutoMineType.*;
+
 public class AutoMineConfigScreen {
+
+    // Pre-allocated Text objects for consistent optimization pattern
+    private static final Text ACTION_BAR_TEXT = Text.literal("Action Bar");
+    private static final Text CHAT_TEXT = Text.literal("Chat");
+    private static final Text OFF_TEXT = Text.literal("Off");
+
+    private static final Text PICKAXE_TEXT = Text.literal("Pickaxe");
+    private static final Text AXE_TEXT = Text.literal("Axe");
+    private static final Text SHOVEL_TEXT = Text.literal("Shovel");
+    private static final Text TOOLS_TEXT = Text.literal("Tools");
+    private static final Text ALL_TEXT = Text.literal("All");
 
     public static Screen create(Screen parent) {
         var builder = ConfigBuilder.create()
@@ -16,23 +30,37 @@ public class AutoMineConfigScreen {
         var general = builder.getOrCreateCategory(Text.literal("General"));
         var entryBuilder = builder.entryBuilder();
 
-        // Auto Mine Type setting
+        // Auto Mine Type setting with formatted display names
         general.addEntry(entryBuilder.startEnumSelector(
                         Text.literal("Auto Mine Type"),
                         AutoMineType.class,
                         AutoMineClient.CONFIG.autoMineType)
-                .setDefaultValue(AutoMineType.ALL)
+                .setDefaultValue(ALL)
                 .setTooltip(Text.literal("What tools should trigger auto mining"))
+                .setEnumNameProvider(autoMineType -> switch (autoMineType) {
+                    case PICKAXE -> PICKAXE_TEXT;
+                    case AXE -> AXE_TEXT;
+                    case SHOVEL -> SHOVEL_TEXT;
+                    case TOOLS -> TOOLS_TEXT;
+                    case ALL -> ALL_TEXT;
+                    default -> throw new IllegalArgumentException("Unknown mine type: " + autoMineType);
+                })
                 .setSaveConsumer(AutoMineClient.CONFIG::setAutoMineType)
                 .build());
 
-        // Combined Notification setting (cleaner UX)
+        // Combined Notification setting (cleaner UX with pre-allocated display names)
         general.addEntry(entryBuilder.startEnumSelector(
                         Text.literal("Notification"),
                         NotificationType.class,
                         getCurrentNotificationType())
-                .setDefaultValue(NotificationType.ACTION_BAR)
+                .setDefaultValue(ACTION_BAR)
                 .setTooltip(Text.literal("How to display toggle messages"))
+                .setEnumNameProvider(notificationType -> switch (notificationType) {
+                    case ACTION_BAR -> ACTION_BAR_TEXT;
+                    case CHAT -> CHAT_TEXT;
+                    case OFF -> OFF_TEXT;
+                    default -> throw new IllegalArgumentException("Unknown notification type: " + notificationType);
+                })
                 .setSaveConsumer(AutoMineConfigScreen::setNotificationType)
                 .build());
 
@@ -63,15 +91,15 @@ public class AutoMineConfigScreen {
         var config = AutoMineClient.CONFIG;
 
         if (!config.sendToggleMessages) {
-            return NotificationType.OFF;
+            return OFF;
         } else if (config.showMessagesInActionBar) {
-            return NotificationType.ACTION_BAR;
+            return ACTION_BAR;
         } else {
-            return NotificationType.CHAT;
+            return CHAT;
         }
     }
 
-    // Setting notification type with traditional switch
+    // Setting notification type with exhaustive switch
     private static void setNotificationType(NotificationType type) {
         var config = AutoMineClient.CONFIG;
 
@@ -88,6 +116,7 @@ public class AutoMineConfigScreen {
                 config.setSendToggleMessages(true);
                 config.setShowMessagesInActionBar(false);
             }
+            default -> throw new IllegalArgumentException("Unknown notification type: " + type);
         }
     }
 }

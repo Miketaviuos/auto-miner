@@ -1,0 +1,29 @@
+{
+  "key.automine.toggle": "Toggle Auto Mine",
+
+  "automine.toggle.on": "Auto Mine: ON",
+  "automine.toggle.off": "Auto Mine: OFF",
+
+  "automine.config.title": "Auto Mine Configuration",
+  "automine.config.category.general": "General Settings",
+
+  "automine.config.type": "Auto Mine Type",
+  "automine.config.type.tooltip": "Select which tools should trigger auto mining",
+  "automine.config.type.pickaxe": "Pickaxe Only",
+  "automine.config.type.axe": "Axe Only",
+  "automine.config.type.shovel": "Shovel Only",
+  "automine.config.type.tools": "All Tools",
+  "automine.config.type.all": "Everything",
+
+  "automine.config.notification": "Notification Type",
+  "automine.config.notification.tooltip": "How to display toggle messages",
+  "automine.config.notification.action_bar": "Action Bar",
+  "automine.config.notification.chat": "Chat",
+  "automine.config.notification.off": "Disabled",
+
+  "automine.config.durability.check": "Check Tool Durability",
+  "automine.config.durability.check.tooltip": "Stop auto mining when tool durability gets low",
+  "automine.config.durability.percentage": "Stop Mining Percentage",
+  "automine.config.durability.percentage.tooltip": "Stop mining when tool durability drops below this percentage",
+  "automine.config.durability.percentage.display": "%d%% Durability"
+}

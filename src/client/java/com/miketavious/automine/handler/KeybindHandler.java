@@ -8,20 +8,21 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.function.Supplier;
-
 public class KeybindHandler {
     private static final String KEY_CATEGORY = "Auto Mine";
-    private static final String KEY_MINE_TOGGLE = "Toggle Auto Mine";
-
-    // Pre-create Text objects using suppliers for lazy evaluation
-    private static final Supplier<Text> MESSAGE_ON = () ->
-            Text.literal("Auto Mine: ON").formatted(Formatting.GREEN);
-    private static final Supplier<Text> MESSAGE_OFF = () ->
-            Text.literal("Auto Mine: OFF").formatted(Formatting.RED);
+    private static final String KEY_MINE_TOGGLE = "key.automine.toggle";
 
     public static KeyBinding autoMineToggleKey;
     private static boolean wasPressed = false;
+
+    // Modern translation-based messages
+    private static Text getToggleOnMessage() {
+        return Text.translatable("automine.toggle.on").formatted(Formatting.GREEN);
+    }
+
+    private static Text getToggleOffMessage() {
+        return Text.translatable("automine.toggle.off").formatted(Formatting.RED);
+    }
 
     public static void register() {
         autoMineToggleKey = KeyBindingHelper.registerKeyBinding(
@@ -54,7 +55,7 @@ public class KeybindHandler {
             if (shouldSendToggleMessage() && !isDurabilityTooLowForToggle()) {
                 // Safe to show "ON" message - tool has sufficient durability
                 var showInActionBar = AutoMineClient.CONFIG.showMessagesInActionBar;
-                AutoMineHandler.queueMessage(MESSAGE_ON.get(), showInActionBar);
+                AutoMineHandler.queueMessage(getToggleOnMessage(), showInActionBar);
             }
             // If durability is too low, skip "ON" message - let durability check show warning instead
         } else {
@@ -64,7 +65,7 @@ public class KeybindHandler {
             // Always show "OFF" message when manually disabling
             if (shouldSendToggleMessage()) {
                 var showInActionBar = AutoMineClient.CONFIG.showMessagesInActionBar;
-                AutoMineHandler.queueMessage(MESSAGE_OFF.get(), showInActionBar);
+                AutoMineHandler.queueMessage(getToggleOffMessage(), showInActionBar);
             }
         }
     }

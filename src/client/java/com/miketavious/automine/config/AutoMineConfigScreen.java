@@ -10,33 +10,33 @@ import static com.miketavious.automine.config.AutoMineType.*;
 
 public class AutoMineConfigScreen {
 
-    // Pre-allocated Text objects for consistent optimization pattern
-    private static final Text ACTION_BAR_TEXT = Text.literal("Action Bar");
-    private static final Text CHAT_TEXT = Text.literal("Chat");
-    private static final Text OFF_TEXT = Text.literal("Off");
+    // Use translation keys for better internationalization support
+    private static final Text ACTION_BAR_TEXT = Text.translatable("automine.config.notification.action_bar");
+    private static final Text CHAT_TEXT = Text.translatable("automine.config.notification.chat");
+    private static final Text OFF_TEXT = Text.translatable("automine.config.notification.off");
 
-    private static final Text PICKAXE_TEXT = Text.literal("Pickaxe");
-    private static final Text AXE_TEXT = Text.literal("Axe");
-    private static final Text SHOVEL_TEXT = Text.literal("Shovel");
-    private static final Text TOOLS_TEXT = Text.literal("Tools");
-    private static final Text ALL_TEXT = Text.literal("All");
+    private static final Text PICKAXE_TEXT = Text.translatable("automine.config.type.pickaxe");
+    private static final Text AXE_TEXT = Text.translatable("automine.config.type.axe");
+    private static final Text SHOVEL_TEXT = Text.translatable("automine.config.type.shovel");
+    private static final Text TOOLS_TEXT = Text.translatable("automine.config.type.tools");
+    private static final Text ALL_TEXT = Text.translatable("automine.config.type.all");
 
     public static Screen create(Screen parent) {
         var builder = ConfigBuilder.create()
                 .setParentScreen(parent)
-                .setTitle(Text.literal("Auto Mine Configuration"))
+                .setTitle(Text.translatable("automine.config.title"))
                 .setSavingRunnable(() -> AutoMineClient.CONFIG.save(true));
 
-        var general = builder.getOrCreateCategory(Text.literal("General"));
+        var general = builder.getOrCreateCategory(Text.translatable("automine.config.category.general"));
         var entryBuilder = builder.entryBuilder();
 
-        // Auto Mine Type setting with formatted display names
+        // Auto Mine Type setting with internationalization
         general.addEntry(entryBuilder.startEnumSelector(
-                        Text.literal("Auto Mine Type"),
+                        Text.translatable("automine.config.type"),
                         AutoMineType.class,
                         AutoMineClient.CONFIG.autoMineType)
                 .setDefaultValue(ALL)
-                .setTooltip(Text.literal("What tools should trigger auto mining"))
+                .setTooltip(Text.translatable("automine.config.type.tooltip"))
                 .setEnumNameProvider(autoMineType -> switch (autoMineType) {
                     case PICKAXE -> PICKAXE_TEXT;
                     case AXE -> AXE_TEXT;
@@ -48,13 +48,13 @@ public class AutoMineConfigScreen {
                 .setSaveConsumer(AutoMineClient.CONFIG::setAutoMineType)
                 .build());
 
-        // Combined Notification setting (cleaner UX with pre-allocated display names)
+        // Notification setting with better UX
         general.addEntry(entryBuilder.startEnumSelector(
-                        Text.literal("Notification"),
+                        Text.translatable("automine.config.notification"),
                         NotificationType.class,
                         getCurrentNotificationType())
                 .setDefaultValue(ACTION_BAR)
-                .setTooltip(Text.literal("How to display toggle messages"))
+                .setTooltip(Text.translatable("automine.config.notification.tooltip"))
                 .setEnumNameProvider(notificationType -> switch (notificationType) {
                     case ACTION_BAR -> ACTION_BAR_TEXT;
                     case CHAT -> CHAT_TEXT;
@@ -64,45 +64,37 @@ public class AutoMineConfigScreen {
                 .setSaveConsumer(AutoMineConfigScreen::setNotificationType)
                 .build());
 
-        // Check for Durability setting
+        // Durability check with improved tooltip
         general.addEntry(entryBuilder.startBooleanToggle(
-                        Text.literal("Check for Durability"),
+                        Text.translatable("automine.config.durability.check"),
                         AutoMineClient.CONFIG.checkForDurability)
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Stop auto mining when tool durability gets low"))
+                .setTooltip(Text.translatable("automine.config.durability.check.tooltip"))
                 .setSaveConsumer(AutoMineClient.CONFIG::setCheckForDurability)
                 .build());
 
-        // Stop Mine Percentage setting
+        // Percentage slider with better formatting
         general.addEntry(entryBuilder.startIntSlider(
-                        Text.literal("Stop Mine Percentage"),
+                        Text.translatable("automine.config.durability.percentage"),
                         AutoMineClient.CONFIG.stopMinePercentage,
                         1, 100)
                 .setDefaultValue(10)
-                .setTooltip(Text.literal("Stop mining when tool durability drops below this percentage"))
+                .setTooltip(Text.translatable("automine.config.durability.percentage.tooltip"))
+                .setTextGetter(value -> Text.translatable("automine.config.durability.percentage.display", value))
                 .setSaveConsumer(AutoMineClient.CONFIG::setStopMinePercentage)
                 .build());
 
         return builder.build();
     }
 
-    // Java 21 compatible - using if-else instead of boolean switch
     private static NotificationType getCurrentNotificationType() {
         var config = AutoMineClient.CONFIG;
-
-        if (!config.sendToggleMessages) {
-            return OFF;
-        } else if (config.showMessagesInActionBar) {
-            return ACTION_BAR;
-        } else {
-            return CHAT;
-        }
+        return !config.sendToggleMessages ? OFF :
+                config.showMessagesInActionBar ? ACTION_BAR : CHAT;
     }
 
-    // Setting notification type with exhaustive switch
     private static void setNotificationType(NotificationType type) {
         var config = AutoMineClient.CONFIG;
-
         switch (type) {
             case OFF -> {
                 config.setSendToggleMessages(false);
@@ -116,7 +108,6 @@ public class AutoMineConfigScreen {
                 config.setSendToggleMessages(true);
                 config.setShowMessagesInActionBar(false);
             }
-            default -> throw new IllegalArgumentException("Unknown notification type: " + type);
         }
     }
 }
